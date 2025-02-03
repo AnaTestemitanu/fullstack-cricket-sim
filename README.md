@@ -21,8 +21,6 @@ To access the **Cricket Simulation Dashboard**, use the following test credentia
 * [🔗 API Endpoints](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#api-endpoints)
 * [📷 Screenshots](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#screenshots)
 * [💡 Technologies Used](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#technologies-used)
-* [🤝 Contributing](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#contributing)
-* [📝 License](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#license)
 
 ---
 
@@ -30,47 +28,52 @@ To access the **Cricket Simulation Dashboard**, use the following test credentia
 
 ✅ **Simulated Cricket Matches** - Uses predefined data to simulate cricket results.
 
-✅ **Interactive Charts** - Visual representation of simulation runs with  **Chart.js** .
+📊 **Interactive Charts** - Visual representation of simulation runs with  **Chart.js** .
 
-✅ **Game Filtering** - Filter matches based on date, venue, and teams.
+🎯 **Game Filtering** - Filter matches based on date, venue, and teams.
 
-✅ **Modern UI** - **Tailwind CSS** for a sleek design with neon highlights.
+🎨 **Modern UI** -**Tailwind CSS** for a sleek, neon-themed look.
 
-✅ **REST API** - **FastAPI** backend serves cricket game data.
+⚡**REST API** - **FastAPI** backend serves cricket game data.
 
-✅ **Docker Support** - Easily deployable with Docker and `docker-compose`.
+**🐳 Docker Support** - Easily deployable with Docker and `docker-compose`.
 
 ---
 
 ## 📂 **Project Structure**
 
-```
+```bash
 fullstack-cricket-sim
-├── backend/                # FastAPI backend
-│   ├── main.py             # Main backend application
-│   ├── models.py           # Database models
-│   ├── database.py         # Database connection
-│   ├── requirements.txt    # Python dependencies
-│   ├── data/               # CSV files for game data
-│   ├── Dockerfile          # Docker configuration for backend
-│   └── test_simulation.py  # Unit tests
+├── backend/                     # FastAPI backend
+│   ├── main.py                  # Main backend application with API endpoints
+│   ├── models.py                # SQLAlchemy database models (Venue, Game, Simulation)
+│   ├── database.py              # Database connection and session setup
+│   ├── requirements.txt         # Python dependencies
+│   ├── data/                    # CSV files for game, venue, and simulation data
+│   ├── Dockerfile               # Backend Docker configuration
+│   └── test_simulation.py       # Unit tests for the backend
 │
-├── frontend/               # React frontend
+├── frontend/                    # React frontend
 │   ├── src/
-│   │   ├── components/     # UI components
-│   │   │   ├── GameDetails.js
-│   │   │   ├── GameSelector.js
-│   │   │   ├── GameFilter.js
-│   │   ├── App.js          # Main React app
-│   │   ├── index.js        # Entry point
-│   │   ├── index.css       # Styles (TailwindCSS)
-│   ├── package.json        # Frontend dependencies
-│   ├── Dockerfile          # Docker configuration for frontend
-│   └── public/index.html   # Static HTML template
+│   │   ├── components/          # UI components
+│   │   │   ├── GameDetails.js   # Displays detailed simulation results for a game
+│   │   │   ├── GameSelector.js  # UI to select a game based on filtering criteria
+│   │   │   ├── GameFilter.js    # UI for filtering games by date, venue, and team
+│   │   │   ├── EnhancedChart.js # Enhanced chart view with interactivity and export options
+│   │   │   ├── ExportCSV.js     # Exports simulation data to CSV
+│   │   │   ├── ExportPDF.js     # Exports simulation view to PDF
+│   │   │   └── Login.js         # Login form component
+│   │   ├── App.js               # Main React application
+│   │   ├── index.js             # Application entry point
+│   │   └── index.css            # Global styles (TailwindCSS)
+│   ├── package.json             # Frontend dependencies and scripts
+│   ├── Dockerfile               # Frontend Docker configuration
+│   └── public/
+│       └── index.html           # HTML template for the React app
 │
-├── docker-compose.yml      # Container orchestration
-├── README.md               # Documentation
-└── .gitignore              # Ignore unnecessary files
+├── docker-compose.yml           # Orchestrates the backend and frontend containers
+├── README.md                    # Project documentation (this file)
+└── .gitignore                    # Files and directories to be ignored by Git
 ```
 
 ---
@@ -129,6 +132,7 @@ This will start **both the backend and frontend** inside Docker containers.
 | `/games`        | GET    | Fetch all cricket games      |
 | `/games/{id}`   | GET    | Fetch a specific game by ID  |
 | `/games/filter` | GET    | Fetch games based on filters |
+| `/login`        | POST   | Dummy login endpoint         |
 
 You can access the interactive API docs at  **`http://localhost:8000/docs`** .
 
@@ -151,14 +155,15 @@ You can access the interactive API docs at  **`http://localhost:8000/docs`** .
 ### **Backend**
 
 * ⚡ FastAPI (Python)
-* 📦 SQLite
-* 🔹 SQLAlchemy
+* 📦 SQLite (Database)
+* 🔹 SQLAlchemy (ORM)
 
 ### **Frontend**
 
 * ⚛ React.js
 * 🎨 Tailwind CSS
-* 📊 Chart.js
+* 📊 Chart.js (with `react-chartjs-2`)
+* 📂 **Export Features:** `react-csv`, `jspdf`, `html2canvas`
 
 ### **DevOps**
 

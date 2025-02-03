@@ -1,15 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- 
+      The <head> section contains metadata and links to resources.
+      It sets the document character set, viewport for responsiveness,
+      theme color for browsers on mobile, and a description of the app.
+    -->
     <meta charset="utf-8" />
+    <!-- Favicon: the icon displayed in the browser tab -->
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <!-- 
+      The viewport meta tag ensures the application is responsive
+      by setting the width of the viewport to the device's width and 
+      initializing the zoom level to 1.
+    -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Theme color for browsers (e.g., Chrome on Android) -->
     <meta name="theme-color" content="#000000" />
+    <!-- Description of the app for search engines and social media previews -->
     <meta name="description" content="Cricket Simulation Dashboard" />
+    <!-- The title that appears in the browser tab -->
     <title>Cricket Simulation Dashboard</title>
   </head>
   <body>
+    <!-- 
+      <noscript> is displayed if JavaScript is disabled in the user's browser.
+      It instructs the user to enable JavaScript for the application to function.
+    -->
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- 
+      The <div> with id "root" is the mounting point for the React application.
+      ReactDOM will render the entire application into this element.
+    -->
     <div id="root"></div>
   </body>
 </html>

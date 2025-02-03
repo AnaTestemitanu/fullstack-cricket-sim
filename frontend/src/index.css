@@ -1,9 +1,18 @@
+/*------------------------------------------------------------------------------
+  Import Tailwind CSS Base, Components, and Utilities
+------------------------------------------------------------------------------*/
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-
-/* Global Styles */
+/*------------------------------------------------------------------------------
+  Global Styles
+------------------------------------------------------------------------------*/
+/* 
+  The body element is styled with a radial gradient background and white text.
+  It uses the "Poppins" font and employs flexbox to center its content both 
+  vertically and horizontally.
+*/
 body {
   background: radial-gradient(circle, #0b0c10, #1f2833, #0b0c10);
   color: white;
@@ -15,7 +24,15 @@ body {
   justify-content: center;
 }
 
-/* Card Container */
+/*------------------------------------------------------------------------------
+  Card Container
+------------------------------------------------------------------------------*/
+/* 
+  The .card class styles containers that hold content (like charts or game details).
+  It uses a semi-transparent dark background with a blur effect, rounded corners,
+  padding, margin, and a neon-like box shadow. A transition effect is applied
+  for hover interactions.
+*/
 .card {
   background: rgba(20, 20, 20, 0.7);
   backdrop-filter: blur(10px);
@@ -26,19 +43,33 @@ body {
   transition: all 0.3s ease-in-out;
 }
 
+/* On hover, the card scales slightly and the box-shadow intensifies for a neon effect. */
 .card:hover {
   box-shadow: 0px 0px 35px rgba(0, 255, 255, 0.8);
   transform: scale(1.02);
 }
 
-/* Headings */
+/*------------------------------------------------------------------------------
+  Headings
+------------------------------------------------------------------------------*/
+/* 
+  Headings (h1, h2, h3) are styled with a neon blue color and a subtle text shadow,
+  and they are centered.
+*/
 h1, h2, h3 {
   color: #00ffff;
   text-shadow: 0px 0px 8px rgba(0, 255, 255, 0.8);
   text-align: center;
 }
 
-/* Neon Button */
+/*------------------------------------------------------------------------------
+  Neon Button
+------------------------------------------------------------------------------*/
+/* 
+  The default button style features a linear gradient background (from cyan to purple),
+  white text, no border, and rounded corners. It includes padding, a box shadow,
+  and a transition effect for hover.
+*/
 button {
   background: linear-gradient(to right, #00FFFF, #7F00FF);
   color: white;
@@ -51,12 +82,19 @@ button {
   transition: all 0.3s ease-in-out;
 }
 
+/* On hover, the button scales up slightly and its box shadow becomes larger. */
 button:hover {
   transform: scale(1.1);
   box-shadow: 0 0 25px rgba(127, 0, 255, 0.9);
 }
 
-/* Dropdowns */
+/*------------------------------------------------------------------------------
+  Dropdowns
+------------------------------------------------------------------------------*/
+/* 
+  Dropdown inputs are styled with a semi-transparent dark background, neon-colored borders,
+  and rounded corners. They have padding and transition effects on hover/focus.
+*/
 select {
   background: rgba(20, 20, 20, 0.6);
   color: #00ffff;
@@ -79,7 +117,14 @@ select:focus {
   box-shadow: 0px 0px 15px rgba(0, 255, 255, 1);
 }
 
-/* Navbar */
+/*------------------------------------------------------------------------------
+  Navbar
+------------------------------------------------------------------------------*/
+/* 
+  The .navbar class styles the navigation bar at the top of the app.
+  It spans the full width, has a semi-transparent background with a blur effect,
+  and uses neon text styling.
+*/
 .navbar {
   width: 100%;
   background: rgba(0, 255, 255, 0.1);
@@ -92,71 +137,118 @@ select:focus {
   text-shadow: 0px 0px 5px rgba(0, 255, 255, 0.6);
 }
 
-/* Ensure the main container is wide and centered */
+/*------------------------------------------------------------------------------
+  Main Application Container
+------------------------------------------------------------------------------*/
+/* 
+  The .app-container class sets a maximum width, responsive width, centers the content,
+  and applies padding around the app's main content.
+*/
 .app-container {
-    max-width: 1700px; /* Adjust the width to make it wider */
-    width: 90%; /* Responsive width */
-    margin: 0 auto; /* Centers the app */
-    padding: 50px;
+  max-width: 1700px; /* Adjust the width to make it wider */
+  width: 90%;        /* Responsive width */
+  margin: 0 auto;    /* Centers the app */
+  padding: 50px;
 }
 
-/* Centering Elements */
+/*------------------------------------------------------------------------------
+  Generic Container
+------------------------------------------------------------------------------*/
+/* 
+  The .container class centers its child elements using flexbox.
+  It is useful for sections that need vertical alignment.
+*/
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  width:80%;
+  width: 80%;
 }
 
-/* Dropdown Section */
+/*------------------------------------------------------------------------------
+  Dropdown Section
+------------------------------------------------------------------------------*/
+/* 
+  The .dropdown-container class styles a section containing multiple dropdowns,
+  arranging them in a row with space between each element.
+*/
 .dropdown-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
 }
 
+/* The .dropdown class is applied to individual dropdown elements for consistent styling. */
 .dropdown {
-    padding: 0.5rem;
-    border: 2px solid rgba(0, 255, 255, 0.8);
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border-radius: 0.25rem;
-  }
-  
-  .btn-neon {
-    padding: 0.5rem 1rem;
-    background: rgba(0, 255, 255, 0.8);
-    color: black;
-    border: none;
-    border-radius: 0.25rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .btn-neon:hover {
-    transform: scale(1.1);
-  }
-  
-  .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 150%;
-    background: white;
-    z-index: 1000;
-    padding: 30px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  border: 2px solid rgba(0, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 0.25rem;
 }
 
-/* Push content below the fixed header */
+/*------------------------------------------------------------------------------
+  Neon Button (Alternate)
+------------------------------------------------------------------------------*/
+/* 
+  The .btn-neon class provides an alternative neon button style, used for smaller buttons
+  or specific UI elements.
+*/
+.btn-neon {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 255, 255, 0.8);
+  color: black;
+  border: none;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.btn-neon:hover {
+  transform: scale(1.1);
+}
+
+/*------------------------------------------------------------------------------
+  Header (Fixed)
+------------------------------------------------------------------------------*/
+/* 
+  The .header class is intended for a fixed header element that remains at the top
+  of the page. It covers a wide area, uses a white background, and has a subtle box shadow.
+*/
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 150%;
+  background: white;
+  z-index: 1000;
+  padding: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/*------------------------------------------------------------------------------
+  Main Content
+------------------------------------------------------------------------------*/
+/* 
+  The .main-content class adds a top margin to push content below a fixed header,
+  ensuring that the main content is not hidden behind the header.
+*/
 .main-content {
-    margin-top: 80px; /* Adjust to the height of the fixed header */
+  margin-top: 80px; /* Adjust to the height of the fixed header */
 }
 
+/*------------------------------------------------------------------------------
+  Login Container
+------------------------------------------------------------------------------*/
+/* 
+  The .login-container class styles the login form container.
+  It sets a maximum width, centers the container, adds padding, a background,
+  rounded corners, and a subtle box shadow.
+*/
 .login-container {
   max-width: 400px;
   margin: 100px auto;
@@ -167,6 +259,7 @@ select:focus {
   text-align: center;
 }
 
+/* Styles for the login form elements */
 .login-container form {
   display: flex;
   flex-direction: column;

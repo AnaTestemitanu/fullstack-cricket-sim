@@ -1,22 +1,44 @@
+# This file defines the services for the fullstack cricket simulation project.
+# It includes two services:
+#   1. backend: Runs the FastAPI backend.
+#   2. frontend: Runs the React frontend.
+# The configuration uses version 3.8 of the Docker Compose specification.
+
 version: '3.8'
+
 services:
+  # Backend Service: FastAPI Application
   backend:
+    # Build the backend service using the Dockerfile in the ./backend directory.
     build: ./backend
+    # Name the backend container for easier reference.
     container_name: cricket_backend
+    # Map port 8000 of the container to port 8000 on the host machine.
     ports:
       - "8000:8000"
+    # Mount the entire local backend directory into the container at /app.
     volumes:
       - ./backend:/app
+    # Use Uvicorn to run the FastAPI application with auto-reload enabled.
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    # Set environment variables for the container.
     environment:
-      - PYTHONUNBUFFERED=1
+      - PYTHONUNBUFFERED=1  # Ensures that Python output is sent straight to the terminal without buffering.
+
+  # Frontend Service: React Application
   frontend:
+    # Build the frontend service using the Dockerfile in the ./frontend directory.
     build: ./frontend
+    # Name the frontend container for easier reference.
     container_name: cricket_frontend
+    # Map port 3000 of the container to port 3000 on the host machine.
     ports:
       - "3000:3000"
+    # Mount only the source and public directories for live reloading, 
+    # so that the container's node_modules (installed during build) are not overwritten.
     volumes:
-      - ./frontend:/app       # Mount the entire frontend directory
-      - /app/node_modules      # Use a named volume for node_modules to preserve installed dependencies
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    # Set environment variables to improve file watching performance inside Docker.
     environment:
       - CHOKIDAR_USEPOLLING=true
