@@ -1,3 +1,5 @@
+# run this command: pytest -v backend/test_simulation.py
+
 import sys
 sys.path.append("/app")  # Ensure /app is in the Python module search path
 
@@ -19,24 +21,23 @@ client = TestClient(app)
 Base.metadata.create_all(bind=engine)
 
 def populate_test_data(db: Session):
-    """Populate the database with test data from CSV files.
-    
-    This function first clears the tables to avoid duplicate records,
-    then loads venues and games from CSV, and finally assigns simulation data
-    to every game for both the home and away teams.
-    """
+    """Populate the database with test data from CSV files."""
     # Clear existing data from the tables.
     db.execute(text("DELETE FROM simulations"))
     db.execute(text("DELETE FROM games"))
     db.execute(text("DELETE FROM venues"))
     db.commit()  # Commit the deletion.
 
+    # Compute the base directory for CSV files relative to this test file.
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(base_dir, "data")  # assumes tests are in the same folder structure as backend
+
     # --------------------------
     # Load venues.
     # --------------------------
-    with open("/app/data/venues.csv", newline='', encoding="utf-8-sig") as csvfile:
-        reader = csv.DictReader(csvfile)  # Using the default comma delimiter.
-        # Strip extra whitespace from fieldnames.
+    venues_csv = os.path.join(data_dir, "venues.csv")
+    with open(venues_csv, newline='', encoding="utf-8-sig") as csvfile:
+        reader = csv.DictReader(csvfile)
         reader.fieldnames = [field.strip() for field in reader.fieldnames]
         print("DEBUG: venues.csv fieldnames =", reader.fieldnames)
         for row in reader:
@@ -51,7 +52,8 @@ def populate_test_data(db: Session):
     # --------------------------
     # Load games.
     # --------------------------
-    with open("/app/data/games.csv", newline='', encoding="utf-8-sig") as csvfile:
+    games_csv = os.path.join(data_dir, "games.csv")
+    with open(games_csv, newline='', encoding="utf-8-sig") as csvfile:
         reader = csv.DictReader(csvfile)
         reader.fieldnames = [field.strip() for field in reader.fieldnames]
         for row in reader:
@@ -68,8 +70,8 @@ def populate_test_data(db: Session):
     # --------------------------
     # Load simulations and assign to each game.
     # --------------------------
-    # Read simulation data once from the CSV.
-    with open("/app/data/simulations.csv", newline='', encoding="utf-8-sig") as csvfile:
+    simulations_csv = os.path.join(data_dir, "simulations.csv")
+    with open(simulations_csv, newline='', encoding="utf-8-sig") as csvfile:
         reader = csv.DictReader(csvfile)
         reader.fieldnames = [field.strip() for field in reader.fieldnames]
         simulation_rows = list(reader)

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import GameSelector from "./components/GameSelector";
 import GameDetails from "./components/GameDetails";
+import Login from "./components/Login";
 // import GameFilter from "./components/GameFilter";
 
 
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
   const [games, setGames] = useState([]);
   const [gameDetails, setGameDetails] = useState(null);
 
@@ -27,6 +29,27 @@ function App() {
       });
   }, []);
   
+  // Dummy effect to fetch games once logged in.
+  React.useEffect(() => {
+    if (loggedIn) {
+      fetch("http://localhost:8000/games")
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Fetched games:", data);
+          if (Array.isArray(data)) {
+            setGames(data);
+          } else {
+            console.error("Unexpected data format:", data);
+            setGames([]);
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching games:", err);
+          setGames([]);
+        });
+    }
+  }, [loggedIn]);
+
 
   const handleGameSelect = (gameId) => {
     fetch(`http://localhost:8000/games/${gameId}`)
@@ -38,6 +61,10 @@ function App() {
       })
       .then((data) => setGameDetails(data))
       .catch((err) => console.error("Error fetching game details:", err));
+  };
+
+  const handleLoginSuccess = (data) => {
+    setLoggedIn(true);
   };
 
 
@@ -63,6 +90,10 @@ function App() {
   //     })
   //     .catch((err) => console.error(err));
   // };
+
+  if (!loggedIn) {
+    return <Login onLoginSuccess={handleLoginSuccess} />;
+  }
 
   return (
     <div className="app-container">

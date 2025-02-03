@@ -156,3 +156,33 @@ select:focus {
 .main-content {
     margin-top: 80px; /* Adjust to the height of the fixed header */
 }
+
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 20px;
+  background: rgba(20, 20, 20, 0.8);
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 255, 255, 0.5);
+  text-align: center;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-container form > div {
+  margin-bottom: 15px;
+}
+
+.login-container label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.login-container input {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+}

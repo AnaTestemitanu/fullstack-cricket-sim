@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 import datetime
 import csv
@@ -22,6 +23,22 @@ app.add_middleware(
 # (Re)create all tables on startup.
 Base.metadata.drop_all(bind=engine)  # Remove this line in production if you want to persist data.
 Base.metadata.create_all(bind=engine)
+
+# Dummy Login Model
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+# Dummy Login Endpoint
+@app.post("/login")
+def login(login_req: LoginRequest):
+    if login_req.username == "test" and login_req.password == "test":
+        return {"message": "Login successful", "token": "dummy-token-12345"}
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password"
+        )
 
 # Dependency to provide a DB session to endpoints.
 def get_db():
@@ -113,9 +130,17 @@ def get_game_details(game_id: int, db: Session = Depends(get_db)):
     if not game:
         raise HTTPException(status_code=404, detail="Game not found")
     
-    # Retrieve simulation runs for the home and away teams.
-    home_sims = db.query(Simulation).filter(Simulation.team == game.home_team).all()
-    away_sims = db.query(Simulation).filter(Simulation.team == game.away_team).all()
+    # Retrieve simulation runs for the home and away team, 
+    # filter the simulations by the current game’s ID as well.
+    home_sims = db.query(Simulation).filter(
+        Simulation.game_id == game.id,
+        Simulation.team == game.home_team
+    ).all()
+    away_sims = db.query(Simulation).filter(
+        Simulation.game_id == game.id,
+        Simulation.team == game.away_team
+    ).all()
+
 
     # Build dictionaries keyed by simulation_run.
     home_dict = {sim.simulation_run: sim.results for sim in home_sims}
