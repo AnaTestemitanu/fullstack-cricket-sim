@@ -1,95 +1,32 @@
 import React, { useEffect, useState } from "react";
 import GameSelector from "./components/GameSelector";
-import GameDetails from "./components/GameDetails";
+import EnhancedChart from "./components/EnhancedChart";
 import Login from "./components/Login";
-// import GameFilter from "./components/GameFilter";
-
-
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [games, setGames] = useState([]);
-  const [gameDetails, setGameDetails] = useState(null);
+  const [selectedGame, setSelectedGame] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/games")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Fetched games:", data); // Debugging
-        if (Array.isArray(data)) {
-          setGames(data);
-        } else {
-          console.error("Unexpected data format:", data);
-          setGames([]);
-        }
-      })
-      .catch((err) => {
-        console.error("Error fetching games:", err);
-        setGames([]);
-      });
-  }, []);
-  
-  // Dummy effect to fetch games once logged in.
-  React.useEffect(() => {
     if (loggedIn) {
       fetch("http://localhost:8000/games")
         .then((res) => res.json())
-        .then((data) => {
-          console.log("Fetched games:", data);
-          if (Array.isArray(data)) {
-            setGames(data);
-          } else {
-            console.error("Unexpected data format:", data);
-            setGames([]);
-          }
-        })
-        .catch((err) => {
-          console.error("Error fetching games:", err);
-          setGames([]);
-        });
+        .then((data) => setGames(data))
+        .catch((err) => console.error("Error fetching games:", err));
     }
   }, [loggedIn]);
 
-
   const handleGameSelect = (gameId) => {
     fetch(`http://localhost:8000/games/${gameId}`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch game details");
-        }
-        return res.json();
-      })
-      .then((data) => setGameDetails(data))
+      .then((res) => res.json())
+      .then((data) => setSelectedGame(data))
       .catch((err) => console.error("Error fetching game details:", err));
   };
 
-  const handleLoginSuccess = (data) => {
+  const handleLoginSuccess = () => {
     setLoggedIn(true);
   };
-
-
-  // Add Filtering Options (as an idea )
-  // const handleFilter = ({ startDate, endDate, venue, team }) => {
-  //   // Build query string based on filter parameters.
-  //   const params = new URLSearchParams();
-  //   if (startDate) params.append("start_date", startDate);
-  //   if (endDate) params.append("end_date", endDate);
-  //   if (venue) params.append("venue", venue);
-  //   if (team) params.append("team", team);
-
-  //   fetch(`http://localhost:8000/games/filter?${params.toString()}`)
-  //     .then((res) => {
-  //       if (!res.ok) {
-  //         throw new Error("Filtering failed");
-  //       }
-  //       return res.json();
-  //     })
-  //     .then((data) => {
-  //       setGames(data);
-  //       setGameDetails(null); // Clear any selected game
-  //     })
-  //     .catch((err) => console.error(err));
-  // };
 
   if (!loggedIn) {
     return <Login onLoginSuccess={handleLoginSuccess} />;
@@ -97,16 +34,18 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Fixed Header */}
       <nav className="navbar fixed-navbar">
         <h1>🏏 Cricket Simulation Dashboard</h1>
       </nav>
-
-      {/* Main Content */}
       <main className="main-content">
-        {/* <GameFilter onFilter={handleFilter} /> */}
         <GameSelector games={games} onSearch={handleGameSelect} />
-        {gameDetails && <GameDetails game={gameDetails} />}
+        {selectedGame ? (
+          <EnhancedChart game={selectedGame} />
+        ) : (
+          <p className="text-center text-gray-400 mt-4">
+            Please select a game to view simulation details.
+          </p>
+        )}
       </main>
     </div>
   );
