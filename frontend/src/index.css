@@ -279,3 +279,92 @@ select:focus {
   border: none;
   border-radius: 5px;
 }
+
+/* ------------------------------------------------------------------------------
+   Game Performance Categories Section (AnalyticsDashboard)
+------------------------------------------------------------------------------ */
+
+.analytics-container {
+  background: rgba(20, 20, 20, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 25px;
+  margin: 30px auto;
+  max-width: 900px;
+  box-shadow: 0px 0px 25px rgba(0, 255, 255, 0.4);
+  transition: all 0.3s ease-in-out;
+}
+
+.analytics-container:hover {
+  box-shadow: 0px 0px 35px rgba(0, 255, 255, 0.8);
+  transform: scale(1.02);
+}
+
+.analytics-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00ffff;
+  text-shadow: 0px 0px 8px rgba(0, 255, 255, 0.8);
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(30, 30, 30, 0.9);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.analytics-header {
+  background: rgba(0, 255, 255, 0.2);
+  padding: 12px;
+  color: #00ffff;
+  font-size: 16px;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid rgba(0, 255, 255, 0.5);
+}
+
+.analytics-row:hover {
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.analytics-cell {
+  padding: 12px;
+  color: white;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.top-scorer {
+  background: rgba(255, 215, 0, 0.8);
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: black;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.game-id-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.game-id-badge {
+  background: rgba(127, 0, 255, 0.6);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  text-shadow: 0px 0px 4px rgba(127, 0, 255, 1);
+  transition: all 0.2s ease-in-out;
+}
+
+.game-id-badge:hover {
+  background: rgba(127, 0, 255, 1);
+  transform: scale(1.1);
+}

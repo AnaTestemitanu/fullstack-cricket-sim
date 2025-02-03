@@ -1,7 +1,7 @@
 ---
-### 📌 **Fullstack Cricket Simulation Dashboard** 🏏
+# 📌 Fullstack Cricket Simulation Dashboard 🏏
 
-A **full-stack** web application that simulates cricket matches and provides interactive visualizations.
+A **full-stack** web application that simulates cricket matches and provides interactive visualizations along with advanced ML analytics on simulation data for each selected game. The app uses a FastAPI backend and a React frontend with a sleek, neon-themed UI.
 ---
 ## 🔑 Login Details
 
@@ -26,17 +26,27 @@ To access the **Cricket Simulation Dashboard**, use the following test credentia
 
 ## 📌 **Features**
 
-✅ **Simulated Cricket Matches** - Uses predefined data to simulate cricket results.
+✅ **Simulated Cricket Matches**
+&nbsp;&nbsp;&nbsp;&nbsp;Uses predefined CSV data to simulate cricket results.
 
-📊 **Interactive Charts** - Visual representation of simulation runs with  **Chart.js** .
+📊 **Interactive Charts**
+&nbsp;&nbsp;&nbsp;&nbsp;Visual representation of simulation runs with Chart.js.
 
-🎯 **Game Filtering** - Filter matches based on date, venue, and teams.
+🎯 **Game Filtering**
+&nbsp;&nbsp;&nbsp;&nbsp;Filter matches based on date, venue, and teams.
 
-🎨 **Modern UI** -**Tailwind CSS** for a sleek, neon-themed look.
+🎨 **Modern UI**
+&nbsp;&nbsp;&nbsp;&nbsp;Tailwind CSS for a sleek, neon-themed look.
 
-⚡**REST API** - **FastAPI** backend serves cricket game data.
+⚡ **REST API**
+&nbsp;&nbsp;&nbsp;&nbsp;FastAPI backend serves cricket game data and simulation results.
 
-**🐳 Docker Support** - Easily deployable with Docker and `docker-compose`.
+📈 **ML Analytics on Simulation Data**
+&nbsp;&nbsp;&nbsp;&nbsp;Clusters simulation runs for the selected game using KMeans after feature scaling.
+&nbsp;&nbsp;&nbsp;&nbsp;Displays clusters (e.g., "Low Scoring Run", "Moderate Scoring Run", "High Scoring Run") to help analyze simulation performance.
+
+🐳 **Docker Support**
+&nbsp;&nbsp;&nbsp;&nbsp;Easily deployable with Docker and `docker-compose`.
 
 ---
 
@@ -44,36 +54,42 @@ To access the **Cricket Simulation Dashboard**, use the following test credentia
 
 ```bash
 fullstack-cricket-sim
-├── backend/                     # FastAPI backend
-│   ├── main.py                  # Main backend application with API endpoints
-│   ├── models.py                # SQLAlchemy database models (Venue, Game, Simulation)
-│   ├── database.py              # Database connection and session setup
-│   ├── requirements.txt         # Python dependencies
-│   ├── data/                    # CSV files for game, venue, and simulation data
-│   ├── Dockerfile               # Backend Docker configuration
-│   └── test_simulation.py       # Unit tests for the backend
-│
-├── frontend/                    # React frontend
-│   ├── src/
-│   │   ├── components/          # UI components
-│   │   │   ├── GameDetails.js   # Displays detailed simulation results for a game
-│   │   │   ├── GameSelector.js  # UI to select a game based on filtering criteria
-│   │   │   ├── GameFilter.js    # UI for filtering games by date, venue, and team
-│   │   │   ├── EnhancedChart.js # Enhanced chart view with interactivity and export options
-│   │   │   ├── ExportCSV.js     # Exports simulation data to CSV
-│   │   │   ├── ExportPDF.js     # Exports simulation view to PDF
-│   │   │   └── Login.js         # Login form component
-│   │   ├── App.js               # Main React application
-│   │   ├── index.js             # Application entry point
-│   │   └── index.css            # Global styles (TailwindCSS)
-│   ├── package.json             # Frontend dependencies and scripts
-│   ├── Dockerfile               # Frontend Docker configuration
-│   └── public/
-│       └── index.html           # HTML template for the React app
-│
-├── docker-compose.yml           # Orchestrates the backend and frontend containers
-├── README.md                    # Project documentation (this file)
-└── .gitignore                    # Files and directories to be ignored by Git
+├── README.md                        # Project documentation
+├── backend                          # FastAPI backend
+│   ├── Dockerfile                   # Docker configuration for the backend
+│   ├── analytics.py                 # ML analytics for simulation run clustering
+│   ├── data                         # CSV data files
+│   │   ├── games.csv                # Game data
+│   │   ├── simulations.csv          # Simulation run data
+│   │   └── venues.csv               # Venue data
+│   ├── database.py                  # Database connection and session setup
+│   ├── main.py                      # Main backend application and API endpoints
+│   ├── models.py                    # SQLAlchemy database models
+│   ├── requirements.txt             # Python dependencies
+│   └── test_simulation.py           # Backend tests
+├── docker-compose.yml               # Docker Compose configuration for the entire app
+├── docs                             # Documentation assets (screenshots, etc.)
+│   ├── GameSelectorImage.png        # Screenshot: Game Selector UI
+│   └── MatchStatsImage.png          # Screenshot: Match Statistics UI
+└── frontend                         # React frontend
+    ├── Dockerfile                   # Docker configuration for the frontend
+    ├── package-lock.json            # npm lock file
+    ├── package.json                 # Frontend dependencies and scripts
+    ├── public
+    │   └── index.html               # HTML template for the React app
+    └── src
+        ├── App.js                   # Main React application
+        ├── components             # React UI components
+        │   ├── AnalyticsDashboard.js  # Displays simulation run clustering for the selected game
+        │   ├── EnhancedChart.js     # Renders simulation charts for a selected game
+        │   ├── ExportCSV.js         # Exports simulation data to CSV
+        │   ├── ExportPDF.js         # Exports simulation view to PDF
+        │   ├── GameDetails.js       # Displays detailed simulation results for a game
+        │   ├── GameFilter.js        # Provides UI for filtering games
+        │   ├── GameSelector.js      # UI for selecting a game based on filtering criteria
+        │   └── Login.js             # Login form component
+        ├── index.css                # Global styles (Tailwind CSS)
+        └── index.js                 # Application entry point
 ```
 
 ---
@@ -127,16 +143,26 @@ This will start **both the backend and frontend** inside Docker containers.
 
 ## 🔗 **API Endpoints**
 
-| Endpoint          | Method | Description                  |
-| ----------------- | ------ | ---------------------------- |
-| `/games`        | GET    | Fetch all cricket games      |
-| `/games/{id}`   | GET    | Fetch a specific game by ID  |
-| `/games/filter` | GET    | Fetch games based on filters |
-| `/login`        | POST   | Dummy login endpoint         |
+| Endpoint                                  | Method | Description                                                |
+| ----------------------------------------- | ------ | ---------------------------------------------------------- |
+| `/games`                                | GET    | Fetch all cricket games                                    |
+| `/games/{game_id}`                      | GET    | Retrieve detailed simulation data for a specific game      |
+| `/games/filter`                         | GET    | Fetch games based on filters (date, venue, and team)       |
+| `/login`                                | POST   | Dummy login endpoint                                       |
+| `/analytics/game/{game_id}/simulations` | GET    | Cluster simulation runs for the selected game using KMeans |
 
 You can access the interactive API docs at  **`http://localhost:8000/docs`** .
 
 ---
+
+### 🤖 ML Analytics: Simulation Run Clustering
+
+For the selected game, the backend computes a feature vector for each simulation run using:
+
+* **Average Score** : (home_score + away_score) / 2
+* **Score Difference** : home_score - away_score
+
+These features are standardized and then clustered using KMeans from scikit-learn. The clustering results are returned as a mapping from simulation run numbers to cluster labels. In the UI, the clusters are displayed with descriptive names (e.g., "Low Scoring Run", "Moderate Scoring Run", "High Scoring Run") to help you analyze simulation performance for that particular game.
 
 ## 📷 **Screenshots**
 
@@ -148,24 +174,29 @@ You can access the interactive API docs at  **`http://localhost:8000/docs`** .
 
 ![Match Statistics](docs/MatchStatsImage.png)
 
----
+### 📈 **Simulations**
 
-## 💡 **Technologies Used**
+![Match Statistics](docs/Simulations.png)
 
-### **Backend**
 
-* ⚡ FastAPI (Python)
-* 📦 SQLite (Database)
-* 🔹 SQLAlchemy (ORM)
+## 💡 Technologies Used
 
-### **Frontend**
+### 🖥️ Backend
 
-* ⚛ React.js
-* 🎨 Tailwind CSS
-* 📊 Chart.js (with `react-chartjs-2`)
-* 📂 **Export Features:** `react-csv`, `jspdf`, `html2canvas`
+- ⚡ **FastAPI** (Python) - High-performance backend framework
+- 🗄️ **SQLite** - Lightweight embedded database
+- 🏛 **SQLAlchemy** - ORM for database management
+- 🤖 **scikit-learn** - ML clustering and preprocessing
+- 🔢 **NumPy** - Numerical computations and data handling
 
-### **DevOps**
+### 🎨 Frontend
 
-* 🐳 Docker
-* ⚙️ Docker-Compose
+- ⚛ **React.js** - Component-based frontend library
+- 🎨 **Tailwind CSS** - Utility-first CSS framework
+- 📊 **Chart.js** (via `react-chartjs-2`) - Interactive data visualizations
+- 📂 **Export Tools**: `react-csv`, `jspdf`, `html2canvas` - CSV & PDF export functionality
+
+### ⚙️ DevOps
+
+- 🐳 **Docker** - Containerized application deployment
+- 🛠 **Docker-Compose** - Multi-container orchestration

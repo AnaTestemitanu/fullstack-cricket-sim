@@ -19,6 +19,7 @@
 import React, { useEffect, useState } from "react";
 import GameSelector from "./components/GameSelector";
 import EnhancedChart from "./components/EnhancedChart";
+import AnalyticsDashboard from "./components/AnalyticsDashboard";
 import Login from "./components/Login";
 
 function App() {
@@ -73,21 +74,17 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Navigation bar at the top of the application */}
       <nav className="navbar fixed-navbar">
         <h1>🏏 Cricket Simulation Dashboard</h1>
       </nav>
-      
-      {/* Main content area */}
       <main className="main-content">
-        {/* GameSelector component: allows users to select a game.
-            When a game is selected, the 'handleGameSelect' function is called to fetch its details. */}
         <GameSelector games={games} onSearch={handleGameSelect} />
-
-        {/* Conditionally render the EnhancedChart component if a game is selected;
-            Otherwise, display a prompt for the user to select a game. */}
         {selectedGame ? (
-          <EnhancedChart game={selectedGame} />
+          <>
+            <EnhancedChart game={selectedGame} />
+            {/* Render the analytics dashboard below the chart */}
+            <AnalyticsDashboard gameId={selectedGame.id} />
+          </>
         ) : (
           <p className="text-center text-gray-400 mt-4">
             Please select a game to view simulation details.
