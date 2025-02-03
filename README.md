@@ -7,6 +7,17 @@ A **full-stack** web application that simulates cricket matches and provides int
 
 ---
 
+
+
+## 🔑 Login Details
+
+To access the **Cricket Simulation Dashboard**, use the following test credentials:
+
+- **Username**: `test`
+- **Password**: `test`
+
+> ⚠️ *These are test credentials and should not be used in production.*
+
 ## 📜 **Table of Contents**
 
 * [📌 Features](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#features)
@@ -133,11 +144,11 @@ You can access the interactive API docs at  **`http://localhost:8000/docs`** .
 
 ### 🎮 **Game Selector**
 
-![Game Selector](fullstack-cricket-sim/docs/GameSelectorImage.png)
+![Game Selector](docs/GameSelectorImage.png)
 
 ### 📊 **Match Statistics**
 
-![Match Statistics](fullstack-cricket-sim/docs/MatchStatsImage.png)
+![Match Statistics](docs/MatchStatsImage.png)
 
 ---
 
