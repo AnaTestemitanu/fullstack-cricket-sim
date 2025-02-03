@@ -1,14 +1,8 @@
-
 ---
-
 ### 📌 **Fullstack Cricket Simulation Dashboard** 🏏
 
 A **full-stack** web application that simulates cricket matches and provides interactive visualizations.
-
 ---
-
-
-
 ## 🔑 Login Details
 
 To access the **Cricket Simulation Dashboard**, use the following test credentials:
@@ -170,30 +164,3 @@ You can access the interactive API docs at  **`http://localhost:8000/docs`** .
 
 * 🐳 Docker
 * ⚙️ Docker-Compose
-
----
-
-## 🤝 **Contributing**
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make your changes.
-4. Commit changes (`git commit -m "Added new feature"`).
-5. Push (`git push origin feature-branch`).
-6. Open a Pull Request.
-
----
-
-## 📝 **License**
-
-This project is licensed under the  **MIT License** .
-
----
-
-### 🎉 **Happy Coding!** 🚀
-
----
-
-This `README.md` file is **fully detailed** and includes everything a user or developer needs to understand the project, set it up, and contribute.
-
-Would you like any modifications or additions? 😊
