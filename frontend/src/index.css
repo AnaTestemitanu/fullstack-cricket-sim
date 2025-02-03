@@ -368,3 +368,9 @@ select:focus {
   background: rgba(127, 0, 255, 1);
   transform: scale(1.1);
 }
+
+/* Neon glowing text effect */
+.neon-text {
+  color: #00ffff; /* Neon blue color */
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff;
+}

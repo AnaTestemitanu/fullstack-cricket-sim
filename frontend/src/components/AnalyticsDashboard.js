@@ -25,15 +25,18 @@ const AnalyticsDashboard = ({ gameId }) => {
     fetch(`http://localhost:8000/analytics/game/${gameId}/simulations`)
       .then((res) => {
         if (!res.ok) {
+          // If the response is not OK, throw an error to be caught below.
           throw new Error("Failed to fetch simulation clustering data");
         }
         return res.json();
       })
       .then((data) => {
+        // Update state with fetched simulation clustering data and mark loading as complete.
         setSimClusters(data);
         setLoading(false);
       })
       .catch((err) => {
+        // Log any errors and update the error state.
         console.error("Error fetching simulation clusters:", err);
         setError(err.message);
         setLoading(false);
@@ -93,14 +96,17 @@ const AnalyticsDashboard = ({ gameId }) => {
           <table className="analytics-table">
             <thead>
               <tr>
+                {/* Table header for Simulation Cluster */}
                 <th className="analytics-header">Simulation Cluster</th>
+                {/* Table header for Simulation Runs */}
                 <th className="analytics-header">Simulation Runs</th>
               </tr>
             </thead>
             <tbody>
               {Object.entries(groupedData).map(([cluster, runs]) => (
                 <tr key={cluster} className="analytics-row">
-                  <td className="analytics-cell">
+                  {/* The neon-text class is added for a glowing neon effect */}
+                  <td className="analytics-cell neon-text">
                     {clusterNames[cluster] || `Cluster ${cluster}`}
                   </td>
                   <td className="analytics-cell">
