@@ -2,15 +2,20 @@
  * EnhancedChart Component
  * 
  * This component renders simulation data for a selected game using Chart.js.
- * It supports multiple chart types (Bar, Line, Scatter, and a Combined view)
- * and includes interactive controls to toggle between chart types, reset zoom,
+ * It supports multiple chart types:
+ *   - Bar chart - removed
+ *   - Histogram: Aggregates simulation results into bins and displays two grouped histograms 
+ *                with the vertical axis showing the proportion of simulation runs.
+ *   - Line: A line chart.
+ *   - Scatter: A scatter plot.
+ *   - Combined: A chart with bars and an overlayed trend line.
+ * 
+ * It also includes interactive controls to toggle between chart types, reset zoom,
  * and export data as CSV or PDF.
  */
 
 import React, { useRef, useState } from "react";
-// Import chart components from react-chartjs-2.
 import { Bar, Line, Scatter } from "react-chartjs-2";
-// Import necessary components and scales from Chart.js.
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,10 +27,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-// Import zoom plugin for Chart.js to enable panning and zooming.
 import zoomPlugin from "chartjs-plugin-zoom";
-// Import export components (CSV and PDF export functionalities).
-import ExportCSV from "./ExportCSV";  // Ensure that the path is correct.
+import ExportCSV from "./ExportCSV";
 import ExportPDF from "./ExportPDF";
 
 // Register Chart.js components and plugins.
@@ -41,19 +44,60 @@ ChartJS.register(
   zoomPlugin
 );
 
+/**
+ * binDataTwoSets - Bins two sets of numeric data into the same bins and returns proportions.
+ *
+ * @param {Array<number>} data1 - The first dataset (home team scores).
+ * @param {Array<number>} data2 - The second dataset (away team scores).
+ * @param {number} numBins - The number of bins to create (default is 10).
+ * @returns {Object} An object with:
+ *   - labels: An array of bin range labels.
+ *   - percents1: Array of proportions (0 to 1) for data1 per bin.
+ *   - percents2: Array of proportions (0 to 1) for data2 per bin.
+ */
+const binDataTwoSets = (data1, data2, numBins = 10) => {
+  const combined = data1.concat(data2);
+  const min = Math.min(...combined);
+  const max = Math.max(...combined);
+  const binWidth = (max - min) / numBins;
+  const counts1 = new Array(numBins).fill(0);
+  const counts2 = new Array(numBins).fill(0);
+
+  data1.forEach(d => {
+    let index = Math.floor((d - min) / binWidth);
+    if (index === numBins) index--;
+    counts1[index]++;
+  });
+  data2.forEach(d => {
+    let index = Math.floor((d - min) / binWidth);
+    if (index === numBins) index--;
+    counts2[index]++;
+  });
+
+  const total1 = data1.length;
+  const total2 = data2.length;
+  const percents1 = counts1.map(count => count / total1);
+  const percents2 = counts2.map(count => count / total2);
+
+  const labels = [];
+  for (let i = 0; i < numBins; i++) {
+    const lower = (min + i * binWidth).toFixed(1);
+    const upper = (min + (i + 1) * binWidth).toFixed(1);
+    labels.push(`${lower} - ${upper}`);
+  }
+  return { labels, percents1, percents2 };
+};
+
 const EnhancedChart = ({ game }) => {
-  // chartRef is used to access the Chart.js instance for resetting zoom.
   const chartRef = useRef(null);
-  // chartType state determines which type of chart is rendered.
-  // Options: "bar", "line", "scatter", "combined"
+  // Available chart types: "histogram", "line", "scatter", "combined"
   const [chartType, setChartType] = useState("combined");
 
-  // If no game data is provided or necessary data is missing, display a message.
   if (!game || !game.home_scores || !game.away_scores) {
     return <p className="text-center text-gray-400">No game data available.</p>;
   }
 
-  // Generate labels for each simulation run (e.g., "Sim 1", "Sim 2", ...).
+  // Standard labels for simulation runs (used for line, scatter, combined views).
   const labels = game.simulation_runs.map((run, index) => `Sim ${index + 1}`);
 
   /**
@@ -73,24 +117,17 @@ const EnhancedChart = ({ game }) => {
     return gradient;
   };
 
-  // Compute the maximum value among scores to help set a dynamic y-axis maximum.
   const maxValue = Math.max(...game.home_scores, ...game.away_scores);
-  const computedMax = maxValue * 1.5; // Increase the maximum slightly for visual padding.
+  const computedMax = maxValue * 1.5; // For non-histogram charts: y-axis shows score values
 
-  // Prepare datasets for the basic bar (or line) chart.
+  // Datasets for the standard grouped bar chart.
   const barDatasets = [
     {
       label: `${game.home_team} Score`,
       data: game.home_scores,
-      // Use a gradient fill for the home team data.
       backgroundColor: (context) => {
         const { chart, chartArea } = context;
-        return getGradient(
-          chart?.ctx,
-          chartArea,
-          "rgba(0, 255, 255, 0.8)",
-          "rgba(0, 255, 255, 0.2)"
-        );
+        return getGradient(chart?.ctx, chartArea, "rgba(0, 255, 255, 0.8)", "rgba(0, 255, 255, 0.2)");
       },
       borderColor: "rgba(0, 255, 255, 1)",
       borderWidth: 1,
@@ -98,18 +135,34 @@ const EnhancedChart = ({ game }) => {
     {
       label: `${game.away_team} Score`,
       data: game.away_scores,
-      // Use a gradient fill for the away team data.
       backgroundColor: (context) => {
         const { chart, chartArea } = context;
-        return getGradient(
-          chart?.ctx,
-          chartArea,
-          "rgba(127, 0, 255, 0.8)",
-          "rgba(127, 0, 255, 0.2)"
-        );
+        return getGradient(chart?.ctx, chartArea, "rgba(127, 0, 255, 0.8)", "rgba(127, 0, 255, 0.2)");
       },
       borderColor: "rgba(127, 0, 255, 1)",
       borderWidth: 1,
+    },
+  ];
+
+  // Datasets for the histogram.
+  // Bin the raw scores into 10 bins and compute the proportion of simulation runs per bin.
+  const { labels: histLabels, percents1: homePercents, percents2: awayPercents } = binDataTwoSets(game.home_scores, game.away_scores, 10);
+  const histogramDatasets = [
+    {
+      label: `${game.home_team} Score (%)`,
+      data: homePercents,
+      backgroundColor: "rgba(0, 255, 255, 0.8)",
+      borderColor: "rgba(0, 255, 255, 1)",
+      borderWidth: 1,
+      barThickness: "flex", // Force bars to fill the category.
+    },
+    {
+      label: `${game.away_team} Score (%)`,
+      data: awayPercents,
+      backgroundColor: "rgba(127, 0, 255, 0.8)",
+      borderColor: "rgba(127, 0, 255, 1)",
+      borderWidth: 1,
+      barThickness: "flex",
     },
   ];
 
@@ -123,7 +176,7 @@ const EnhancedChart = ({ game }) => {
     {
       label: "Average Score Trend",
       data: averageScores,
-      type: "line", // Render this dataset as a line.
+      type: "line",
       borderColor: "rgba(255, 206, 86, 1)",
       backgroundColor: "rgba(255, 206, 86, 0.2)",
       fill: false,
@@ -133,8 +186,7 @@ const EnhancedChart = ({ game }) => {
     },
   ];
 
-  // Prepare datasets for a scatter plot.
-  // Each point represents a simulation run with an x-value (run number) and y-value (score).
+  // Datasets for a scatter chart.
   const scatterDatasets = [
     {
       label: `${game.home_team} Score`,
@@ -152,17 +204,20 @@ const EnhancedChart = ({ game }) => {
     },
   ];
 
-  // Determine which datasets to use based on the selected chart type.
+  // Determine which dataset to use based on the selected chart type.
   let selectedData;
+  // case "bar":
+  //   selectedData = { labels, datasets: barDatasets };
+  //   break;
   switch (chartType) {
-    case "bar":
-      selectedData = { labels, datasets: barDatasets };
+    case "histogram":
+      selectedData = { labels: histLabels, datasets: histogramDatasets };
       break;
     case "line":
-      selectedData = { labels, datasets: barDatasets }; // Render as line using the <Line> component.
+      selectedData = { labels, datasets: barDatasets };
       break;
     case "scatter":
-      selectedData = { datasets: scatterDatasets }; // Scatter charts don't use labels.
+      selectedData = { datasets: scatterDatasets };
       break;
     case "combined":
     default:
@@ -170,13 +225,48 @@ const EnhancedChart = ({ game }) => {
       break;
   }
 
-  // Chart options for configuring appearance and interactivity.
+
+  const xAxisOptions = {
+    type: chartType === "scatter" ? "linear" : "category",
+    ticks: { color: "white", font: { size: 12 } },
+    grid: { color: "rgba(255,255,255,0.1)" },
+  };
+
+  // For histogram
+  if (chartType === "histogram") {
+    xAxisOptions.categoryPercentage = 1.0;
+    xAxisOptions.barPercentage = 1.0;
+  }
+
+  let yAxisOptions;
+  if (chartType === "histogram") {
+    yAxisOptions = {
+      beginAtZero: true,
+      ticks: {
+        color: "white",
+        font: { size: 12 },
+        stepSize: 0.05,
+        callback: value => value.toFixed(2)
+      },
+      grid: { color: "rgba(255,255,255,0.1)" },
+      // Set maximum as the highest proportion plus a small buffer.
+      max: Math.max(...histogramDatasets[0].data, ...histogramDatasets[1].data) + 0.05,
+    };
+  } else {
+    yAxisOptions = {
+      beginAtZero: true,
+      ticks: { color: "white", font: { size: 12 } },
+      grid: { color: "rgba(255,255,255,0.1)" },
+      max: computedMax,
+    };
+  }
+
+  // Chart config
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        // Configure legend styles.
         labels: { color: "white", font: { size: 14 } },
       },
       title: {
@@ -186,17 +276,15 @@ const EnhancedChart = ({ game }) => {
         font: { size: 18, weight: "bold" },
       },
       tooltip: {
-        // Custom tooltip callback to display dataset label and value.
         callbacks: {
           label: (tooltipItem) => `${tooltipItem.dataset.label}: ${tooltipItem.raw}`,
         },
       },
       zoom: {
-        // Enable panning and zooming on the x-axis.
         pan: {
           enabled: true,
           mode: "x",
-          modifierKey: "ctrl", // Users must hold the CTRL key to pan.
+          modifierKey: "ctrl",
         },
         zoom: {
           wheel: { enabled: true },
@@ -206,18 +294,23 @@ const EnhancedChart = ({ game }) => {
       },
     },
     scales: {
-      // X-axis configuration: Use linear scale for scatter charts; otherwise, use category.
       x: {
-        type: chartType === "scatter" ? "linear" : "category",
-        ticks: { color: "white", font: { size: 12 } },
-        grid: { color: "rgba(255,255,255,0.1)" },
+        ...xAxisOptions,
+        title: {
+          display: true,
+          text: chartType === "histogram" ? "Score Range" : "Simulation Run",
+          color: "white",
+          font: { size: 14, weight: "bold" },
+        },
       },
-      // Y-axis configuration with a dynamic maximum value.
       y: {
-        beginAtZero: true,
-        ticks: { color: "white", font: { size: 12 } },
-        grid: { color: "rgba(255,255,255,0.1)" },
-        max: computedMax,
+        ...yAxisOptions,
+        title: {
+          display: true,
+          text: chartType === "histogram" ? "Proportion of Simulation Runs" : "Score",
+          color: "white",
+          font: { size: 14, weight: "bold" },
+        },
       },
     },
     animation: {
@@ -233,13 +326,11 @@ const EnhancedChart = ({ game }) => {
    */
   const toggleChartType = (newType) => {
     setChartType(newType);
-    // Reset zoom whenever the chart type changes.
     chartRef.current?.resetZoom();
   };
 
   return (
     <div className="card max-w-4xl mx-auto p-4 bg-gray-900 rounded-lg shadow-lg">
-      {/* Header Section */}
       <h2 className="text-neonBlue text-3xl font-bold text-center">
         {game.home_team} vs {game.away_team}
       </h2>
@@ -248,18 +339,12 @@ const EnhancedChart = ({ game }) => {
       <p className="text-center text-neonAccent text-xl mt-2 font-bold">
         Home Win Percentage: {game.home_win_percentage.toFixed(2)}%
       </p>
-
-      {/* Chart Container */}
-      {/* The container has an ID used by ExportPDF for screenshot capturing */}
       <div id="chart-container" className="mt-6 w-full" style={{ height: "600px" }}>
-        {chartType === "bar" && <Bar ref={chartRef} data={selectedData} options={options} />}
+        {chartType === "histogram" && <Bar ref={chartRef} data={selectedData} options={options} />}
         {chartType === "line" && <Line ref={chartRef} data={selectedData} options={options} />}
         {chartType === "scatter" && <Scatter ref={chartRef} data={selectedData} options={options} />}
         {chartType === "combined" && <Bar ref={chartRef} data={selectedData} options={options} />}
       </div>
-
-      {/* Control Panel */}
-      {/* Contains buttons to reset zoom, toggle chart types, and export data. */}
       <div className="flex flex-wrap justify-center mt-4 space-x-4">
         <button
           className="px-4 py-2 bg-neonBlue text-gray-900 font-bold rounded hover:bg-neonAccent transition-colors"
@@ -267,11 +352,19 @@ const EnhancedChart = ({ game }) => {
         >
           Reset Zoom
         </button>
+        {/*
         <button
           className="px-4 py-2 bg-gray-700 text-white font-bold rounded hover:bg-gray-600 transition-colors"
           onClick={() => toggleChartType("bar")}
         >
           Bar
+        </button>
+        */}
+        <button
+          className="px-4 py-2 bg-gray-700 text-white font-bold rounded hover:bg-gray-600 transition-colors"
+          onClick={() => toggleChartType("histogram")}
+        >
+          Histogram
         </button>
         <button
           className="px-4 py-2 bg-gray-700 text-white font-bold rounded hover:bg-gray-600 transition-colors"
@@ -291,7 +384,6 @@ const EnhancedChart = ({ game }) => {
         >
           Combined
         </button>
-        {/* Export Buttons */}
         <ExportCSV game={game} />
         <ExportPDF />
       </div>

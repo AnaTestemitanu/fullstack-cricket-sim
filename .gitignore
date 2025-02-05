@@ -5,3 +5,4 @@ build/
 dist/
 *.log
 app.db
+backend/app.db
