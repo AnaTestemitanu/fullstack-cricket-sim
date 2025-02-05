@@ -12,18 +12,6 @@ To access the **Cricket Simulation Dashboard**, use the following test credentia
 
 > ⚠️ *These are test credentials and should not be used in production.*
 
-## 📜 **Table of Contents**
-
-* [📌 Features](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#features)
-* [📂 Project Structure](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#project-structure)
-* [🛠 Installation &amp; Setup](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#installation--setup)
-* [🚀 Running the Application](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#running-the-application)
-* [🔗 API Endpoints](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#api-endpoints)
-* [📷 Screenshots](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#screenshots)
-* [💡 Technologies Used](https://chatgpt.com/c/67a00f57-a2c0-8003-953f-84a960ec4f9c#technologies-used)
-
----
-
 ## 📌 **Features**
 
 ✅ **Simulated Cricket Matches**
@@ -177,7 +165,6 @@ These features are standardized and then clustered using KMeans from scikit-lear
 ### 📈 **Simulations**
 
 ![Match Statistics](docs/Simulations.png)
-
 
 ## 💡 Technologies Used
 
